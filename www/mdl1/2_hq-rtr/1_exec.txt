@@ -1,0 +1,32 @@
+#!/bin/sh
+
+# Установка временной зоны
+timedatectl set-timezone Asia/Vladivostok
+
+# Настройка сети
+echo 172.16.4.4/28 > /etc/net/ifaces/ens18/ipv4address
+echo default via 172.16.4.1 > /etc/net/ifaces/ens18/ipv4route
+echo "TYPE=eth" > /etc/net/ifaces/ens18/options
+
+# Настройка DNS
+echo -e "nameserver 8.8.8.8" > /etc/resolv.conf
+
+# Перезапуск сети
+systemctl restart network
+
+# Включение IP forwarding
+sed -i 's/net.ipv4.ip_forward = 0/net.ipv4.ip_forward = 1/g' /etc/net/sysctl.conf
+
+# Настройка iptables
+iptables -t nat -A POSTROUTING -j MASQUERADE
+iptables-save >> /etc/sysconfig/iptables
+
+# Включение и запуск iptables
+systemctl enable iptables
+systemctl restart iptables
+service iptables enable
+
+apt-get update
+
+apt-get install wget
+

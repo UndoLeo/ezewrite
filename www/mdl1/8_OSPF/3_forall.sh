@@ -1,0 +1,1 @@
+echo -e "search au-team.irpo \nnameserver 192.168.1.10" > /etc/resolv.conf

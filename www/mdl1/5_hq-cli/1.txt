@@ -1,0 +1,7 @@
+
+timedatectl set-timezone Asia/Vladivostok
+
+hostnamectl set-hostname hq-cli.au-team.irpo; exec bash
+
+systemctl restart network
+
